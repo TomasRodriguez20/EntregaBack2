@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+</head>
+<body>
+<nav style="
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 2rem;
+  background-color: #343a40;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+">
+  <a href="/" style="color: white; text-decoration: none; font-size: 1.2rem; font-weight: bold;">
+    🛍️ Mi Tienda
+  </a>
+
+  <div style="display: flex; gap: 1rem; align-items: center;">
+    {{#if user}}
+      <a 
+        href="/profile" 
+        style="
+          color: #ffffff;
+          text-decoration: none;
+          padding: 0.5rem 1rem;
+          background-color: #17a2b8;
+          border-radius: 5px;
+          transition: background-color 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='#138496'"
+        onmouseout="this.style.backgroundColor='#17a2b8'"
+      >
+        Perfil
+      </a>
+
+      <form action="/api/sessions/logout" method="POST" style="display: inline;">
+        <button 
+          type="submit" 
+          style="
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+          "
+          onmouseover="this.style.backgroundColor='#c82333'"
+          onmouseout="this.style.backgroundColor='#dc3545'"
+        >
+          Cerrar sesión
+        </button>
+      </form>
+    {{else}}
+      <a 
+        href="/login" 
+        style="
+          color: #ffffff;
+          text-decoration: none;
+          padding: 0.5rem 1rem;
+          background-color: #007bff;
+          border-radius: 5px;
+          transition: background-color 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='#0056b3'"
+        onmouseout="this.style.backgroundColor='#007bff'"
+      >
+        Login
+      </a>
+
+      <a 
+        href="/register" 
+        style="
+          color: #ffffff;
+          text-decoration: none;
+          padding: 0.5rem 1rem;
+          background-color: #28a745;
+          border-radius: 5px;
+          transition: background-color 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='#218838'"
+        onmouseout="this.style.backgroundColor='#28a745'"
+      >
+        Registrarse
+      </a>
+    {{/if}}
+  </div>
+</nav>
+
+  {{{body}}}
+</body>
+</html>

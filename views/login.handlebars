@@ -1,0 +1,47 @@
+<div style="max-width: 400px; margin: 3rem auto; padding: 2rem; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center; margin-bottom: 1.5rem;">Iniciar Sesión</h2>
+  <form method="POST" action="/api/sessions/login">
+    <div style="margin-bottom: 1rem;">
+      <label>Email:</label><br />
+      <input type="email" name="email" required style="width: 100%; padding: 0.5rem;" />
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label>Contraseña:</label><br />
+      <input type="password" name="password" required style="width: 100%; padding: 0.5rem;" />
+    </div>
+    <button type="submit" style="width: 100%; padding: 0.7rem; background-color: #007bff; color: white; border: none; border-radius: 5px;">Ingresar</button>
+  </form>
+  <p style="text-align: center; margin-top: 1rem;">
+    ¿No tenés cuenta? <a href="/register">Registrate</a>
+  </p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const error = params.get('error');
+  const success = params.get('success');
+
+  if (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: decodeURIComponent(error),
+    }).then(() => {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    });
+  }
+
+  if (success) {
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: decodeURIComponent(success),
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    });
+  }
+</script>

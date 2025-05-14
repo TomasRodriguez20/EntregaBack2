@@ -1,0 +1,43 @@
+<div style="max-width: 400px; margin: auto;">
+  <h2>Editar Perfil</h2>
+  <form id="editProfileForm" method="POST" action="/api/users/{{user._id}}">
+    <label>Nombre:<br />
+      <input type="text" name="first_name" value="{{user.first_name}}" required />
+    </label><br /><br />
+
+    <label>Apellido:<br />
+      <input type="text" name="last_name" value="{{user.last_name}}" required />
+    </label><br /><br />
+
+    <label>Email:<br />
+      <input type="email" name="email" value="{{user.email}}" required />
+    </label><br /><br />
+
+    <label>Edad:<br />
+      <input type="number" name="age" value="{{user.age}}" required min="13" />
+    </label><br /><br />
+
+    <button type="submit">Guardar Cambios</button>
+    <a href="/profile" style="margin-left: 10px;">Cancelar</a>
+  </form>
+</div>
+
+<script>
+  document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+    const email = this.email.value.trim();
+    const age = parseInt(this.age.value, 10);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Por favor ingresa un email válido.');
+      e.preventDefault();
+      return;
+    }
+
+    if (age < 13) {
+      alert('La edad mínima es 13 años.');
+      e.preventDefault();
+      return;
+    }
+  });
+</script>

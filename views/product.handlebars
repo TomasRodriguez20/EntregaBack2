@@ -1,0 +1,69 @@
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div style="max-width: 600px; margin: 2rem auto; padding: 2rem; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+  <h1 style="margin-bottom: 1rem;">{{product.title}}</h1>
+  <img src="{{product.image}}" alt="{{product.title}}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;" />
+  <p style="font-size: 1rem; color: #555;">{{product.description}}</p>
+  <p style="font-size: 1.2rem; font-weight: bold; margin: 1rem 0;">Precio: ${{product.price}}</p>
+
+  <form 
+    id="addToCartForm" 
+    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"
+  >
+    <label for="quantity">Cantidad:</label>
+    <input type="number" id="quantity" name="quantity" min="1" value="1" style="padding: 0.3rem; width: 80px; text-align: center;" required />
+
+    <button 
+      type="submit" 
+      style="background-color: #28a745; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;">
+      Agregar al carrito
+    </button>
+  </form>
+
+  <a href="/" style="display: inline-block; margin-top: 1rem; text-decoration: none; color: #007bff;">← Volver</a>
+</div>
+
+<script>
+  const form = document.getElementById('addToCartForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const quantity = document.getElementById('quantity').value;
+    const cartId = '{{user.cart}}';
+    const productId = '{{product._id}}';
+
+    try {
+      const res = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity })
+      });
+
+      if (res.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Producto agregado',
+          text: 'Se agregó al carrito correctamente',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => window.location.href = '/');
+      } else if (res.status === 401 || res.redirected) {
+        window.location.href = '/login';
+      } else {
+        const data = await res.json();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.error || 'No se pudo agregar al carrito'
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error inesperado'
+      });
+    }
+  });
+</script>

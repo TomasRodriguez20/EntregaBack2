@@ -1,0 +1,95 @@
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div style="max-width: 900px; margin: 2rem auto; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background-color: #fff;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0;">🛒 Tu carrito</h2>
+  </div>
+
+  {{#if cart.products.length}}
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #f8f9fa;">
+          <th style="padding: 0.75rem; text-align: left;">Producto</th>
+          <th style="padding: 0.75rem; text-align: left;">Precio</th>
+          <th style="padding: 0.75rem; text-align: left;">Cantidad</th>
+          <th style="padding: 0.75rem; text-align: left;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each cart.products}}
+  {{#if this.product}}
+    <tr>
+      <td style="padding: 0.75rem;">{{this.product.title}}</td>
+      <td style="padding: 0.75rem;">${{this.product.price}}</td>
+      <td style="padding: 0.75rem;">{{this.quantity}}</td>
+      <td style="padding: 0.75rem;">
+        <button 
+          onclick="removeFromCart('{{../cart._id}}', '{{this.product._id}}')" 
+          style="background-color: #dc3545; color: white; border: none; padding: 0.4rem 0.75rem; border-radius: 5px;">
+          Eliminar
+        </button>
+      </td>
+    </tr>
+  {{/if}}
+{{/each}}
+
+      </tbody>
+    </table>
+  {{else}}
+    <p style="text-align: center; margin-top: 2rem;">😕 No hay productos en el carrito.</p>
+  {{/if}}
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <a href="/" style="padding: 0.75rem 1.5rem; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">← Seguir comprando</a>
+  </div>
+  {{#if cart.products.length}}
+  <div style="text-align: center; margin-top: 1.5rem;">
+    <form id="purchaseForm" action="/order/create" method="POST">
+      <button 
+        type="submit" 
+        style="padding: 0.75rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 1rem;">
+        🧾 Finalizar compra
+      </button>
+    </form>
+  </div>
+{{/if}}
+
+</div>
+
+<script>
+  async function removeFromCart(cartId, productId) {
+    const confirm = await Swal.fire({
+      title: '¿Eliminar producto?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar'
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const res = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+          method: 'DELETE'
+        });
+
+        if (res.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Eliminado',
+            text: 'Producto eliminado del carrito',
+            timer: 1500,
+            showConfirmButton: false
+          }).then(() => location.reload());
+        } else {
+          const data = await res.json();
+          Swal.fire('Error', data.error || 'No se pudo eliminar el producto', 'error');
+        }
+      } catch (err) {
+        Swal.fire('Error', 'Error de red al eliminar el producto', 'error');
+      }
+    }
+  }
+</script>
